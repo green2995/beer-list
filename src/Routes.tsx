@@ -1,6 +1,7 @@
 import React from "react";
 import {
   BrowserRouter as Router,
+  Redirect,
   Route,
   Switch,
 } from "react-router-dom";
@@ -12,7 +13,8 @@ const Routes = () => {
   return (
     <Router>
         <Switch>
-          <Route path="/home" component={Home} />
+          <Route exact path={"/"} render={() => <Redirect to={"/home"} />} />
+          <Route path={"/home"} component={Home} />
         </Switch>
     </Router>
   );
