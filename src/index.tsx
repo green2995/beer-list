@@ -20,6 +20,8 @@ export const store = createStore(
   )
 );
 
+export type RootState = ReturnType<typeof store["getState"]>
+
 sagaMiddleware.run(rootSaga);
 
 ReactDOM.render(
