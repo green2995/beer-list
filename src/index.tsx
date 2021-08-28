@@ -6,6 +6,7 @@ import rootReducer from "./Modules";
 import { rootSaga } from "./Modules";
 import createSagaMiddleware from "redux-saga";
 import { createStore, applyMiddleware, compose } from "redux";
+import "./style.css"
 
 const sagaMiddleware = createSagaMiddleware();
 
