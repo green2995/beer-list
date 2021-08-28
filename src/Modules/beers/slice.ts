@@ -29,11 +29,8 @@ export const beersSlice = createSlice({
       state.isLoading = false;
       state.error = error;
     },
-    swapColumn: (state, {payload: {src, dest}}) => {
-      const tempSrc = state.columnIndice[src];
-      const tempDest = state.columnIndice[dest];
-      state.columnIndice[dest] = tempSrc;
-      state.columnIndice[src] = tempDest;
+    setColumnIndice: (state, {payload: indice}) => {
+      state.columnIndice = indice;
     }
   },
 })
@@ -49,8 +46,4 @@ export const beersSelector = {
         .map((beer) => ({...beer})) as Beer[]
     }
   ),
-  columnIndice: createSelector(
-    (state: RootState) => state.beers.columnIndice,
-    (indice) => indice
-  )
 }

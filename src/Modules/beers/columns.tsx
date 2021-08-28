@@ -12,7 +12,6 @@ export const tableColumns = [
         </div>
       )
     },
-    
   },
   { 
     field: "name",
@@ -25,13 +24,7 @@ export const tableColumns = [
   {
     field: "ph",
     title: "산도(ph)",
-    render: (beer) => {
-      return (
-        <div>
-          {beer.ph || "-"}
-        </div>
-      )
-    }
+    emptyValue: "-",
   },
   {
     field: "volume",
@@ -49,12 +42,12 @@ export const tableColumns = [
     title: "발효도(%)"
   },
   {
-    field: "brewers_tips",
-    title: "메이커 팁"
+    field: "description",
+    title: "맥주 정보"
   },
   {
     field: "ingredients",
-    title: "재료 순서",
+    title: "성분",
     render: (beer) => {
       return (
         <div style={{width: 200}}>
