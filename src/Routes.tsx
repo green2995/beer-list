@@ -14,14 +14,6 @@ const Routes = () => {
 
   return (
     <Router>
-      <ul>
-        <li>
-          <Link to="/">Home</Link>
-        </li>
-        <li>
-          <Link to="/beerlist">Beer List</Link>
-        </li>
-      </ul>
       <Switch>
         <Route exact path={"/"} render={() => <Redirect to={"/home"} />} />
         <Route path={"/home"} component={Home} />
