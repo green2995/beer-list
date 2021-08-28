@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components';
 import { useCurrent } from '../../Hooks/useCurrent';
+import { clamp } from '../../Util/number/interpolate';
 
 const NumberInput = React.forwardRef<NumberInput, NumberInputProps>((
   props,
@@ -20,9 +21,12 @@ const NumberInput = React.forwardRef<NumberInput, NumberInputProps>((
 
   /** methods */
 
+  // for imperative use case: shift + arrow up/down
   function setValue(value: number) {
     if (!inputRef.current) return;
-    const fixed = value.toFixed(accuracy);
+
+    const clamped = clamp(value, refState.min, refState.max);
+    const fixed = clamped.toFixed(accuracy);
     const accurate = Number(fixed);
 
     inputRef.current.value = fixed;
@@ -49,18 +53,27 @@ const NumberInput = React.forwardRef<NumberInput, NumberInputProps>((
   /** input event handlers */
 
   function onChange(e: React.ChangeEvent<HTMLInputElement>) {
-    if (Number(e.target.value) === NaN) return;
-    const num = Number(e.target.value);
-    setValue(num)
+    if (Number(e.target.value) === NaN) {
+    } else {
+      const num = Number(e.target.value);
+
+      if (num < refState.min) setValue(num);
+      if (num > refState.max) setValue(num);
+
+      const clamped = clamp(num, refState.min, refState.max)
+      refState.value = clamped;
+      props.onChange?.call(null, clamped);
+    }
   }
 
   function onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    const multiplier = e.shiftKey ? 10 : 1;
-
-    if (e.key === "ArrowDown") {
-      setValue(Math.max(refState.value - step * multiplier, refState.min));
-    } else if (e.key === "ArrowUp") {
-      setValue(Math.min(refState.value + step * multiplier, refState.max));
+    if (e.shiftKey) {
+      e.preventDefault();
+      if (e.key === "ArrowDown") {
+        setValue(refState.value - step * 10);
+      } else if (e.key === "ArrowUp") {
+        setValue(refState.value + step * 10);
+      }
     }
   }
 
@@ -86,9 +99,13 @@ const NumberInput = React.forwardRef<NumberInput, NumberInputProps>((
         ref={inputRef}
         onChange={onChange}
         onKeyDown={onKeyDown}
+        min={props.min}
+        max={props.max}
+        step={step}
+        type={"number"}
       />
       {props.unit && (
-        <div style={props.unitStyle}>{props.unit}</div>
+        <UnitText style={props.unitStyle}>{props.unit}</UnitText>
       )}
     </Container>
   )
@@ -111,6 +128,7 @@ const Input = styled.input`
     box-shadow: 0px 0px 2px grey;
   }
 
+  /* Chrome, Safari, Edge, Opera */
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -121,6 +139,10 @@ const Input = styled.input`
   &[type=number] {
     -moz-appearance: textfield;
   }
+`;
+
+const UnitText = styled.div`
+  margin-left: 3px;
 `;
 
 
@@ -136,9 +158,6 @@ export type NumberInputProps = {
 }
 
 type NumberInput = {
-  setMax: (max: number) => void;
-  setMin: (min: number) => void;
-  setValue: (value: number) => void;
   getValue: () => number
 }
 
