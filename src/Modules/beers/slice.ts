@@ -98,7 +98,7 @@ export const beersSelector = {
   raw: createSelector((state: RootState) => state.beers, (beers) => beers),
 }
 
-type RangeFilter = {from: number, to: number}
+export type RangeFilter = {from: number, to: number}
 
 export type BeerFilter = {
   abv: RangeFilter

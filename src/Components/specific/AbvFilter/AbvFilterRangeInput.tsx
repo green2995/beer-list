@@ -2,7 +2,7 @@ import { useCurrent } from '../../../Hooks/useCurrent'
 import RangeInput from '../../derivative/RangeInput'
 
 type AbvFilterRangeInputProps = {
-  onPressEnter?: (from: number, to: number) => void
+  onPressAdd?: (from: number, to: number) => void
 }
 
 const ABV_FILTER_MIN = 0;
@@ -19,9 +19,11 @@ const AbvFilterRangeInput = (props: AbvFilterRangeInputProps) => {
     if (to !== undefined) refState.to = to;
   }
 
-  function onPressEnter() {
-    const sorted = [refState.from, refState.to].sort();
-    props.onPressEnter?.call(null, sorted[0], sorted[1]);
+  function onPressAdd() {
+    const [from, to] = [refState.from, refState.to].sort();
+    if (from === ABV_FILTER_MIN && to === ABV_FILTER_MIN) return;
+    if (from === ABV_FILTER_MAX && to === ABV_FILTER_MAX) return;
+    props.onPressAdd?.call(null, from, to);
   }
 
   return (
@@ -38,7 +40,7 @@ const AbvFilterRangeInput = (props: AbvFilterRangeInputProps) => {
         unitStyle={{ fontSize: 12 }}
         divider={<div style={{ marginLeft: 5, marginRight: 5 }}>~</div>}
       />
-      <button onClick={onPressEnter} style={{ marginLeft: 10 }}>
+      <button onClick={onPressAdd} style={{ marginLeft: 10 }}>
         입력
       </button>
     </div>

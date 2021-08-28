@@ -6,7 +6,7 @@ import styled from 'styled-components'
 
 type AbvFilterProps = {
   data?: WithFilterInfo<BeerFilter["abv"]>[]
-  onPressEnter?: (from: number, to: number) => void
+  onPressAdd?: (from: number, to: number) => void
   onPressDelete?: (range: WithFilterInfo<BeerFilter["abv"]>) => void
   onPressToggle?: (range: WithFilterInfo<BeerFilter["abv"]>, result: boolean) => void
 }
@@ -23,7 +23,7 @@ const AbvFilter = (props: AbvFilterProps) => {
         />)
       )}
       <AbvFilterRangeInput
-        onPressEnter={props.onPressEnter}
+        onPressAdd={props.onPressAdd}
       />
     </Container>
   )

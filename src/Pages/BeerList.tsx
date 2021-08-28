@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch, useSelector } from "react-redux"
-import { beersSelector, beersSlice } from '../Modules/beers';
+import { BeerFilter, beersSelector, beersSlice, RangeFilter, WithFilterInfo } from '../Modules/beers';
 import MaterialTable, { Column } from "material-table"
 import { tableColumns } from '../Modules/beers/columns';
 import { swap } from '../Util/array/swap';
@@ -27,6 +27,20 @@ function BeerList() {
     columnIndice_Temp.current = swap(columnIndice_Temp.current, src, dest);
   }
 
+  function onPressDelete(data: WithFilterInfo<BeerFilter["abv"]>) {
+    dispatch(beersSlice.actions.removeFilter(data.id))
+  }
+
+  function onPressToggle(data: WithFilterInfo<BeerFilter["abv"]>) {
+    dispatch(beersSlice.actions.toggleFilter(data.id))
+  }
+
+  function onPressAdd(from: number, to: number) {
+    dispatch(beersSlice.actions.addFilter({
+      abv: {from, to}
+    }))
+  }
+
   return (
     <div>
       <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
@@ -35,17 +49,9 @@ function BeerList() {
         </div>
         <AbvFilter
           data={avFilters}
-          onPressDelete={(data) => {
-            dispatch(beersSlice.actions.removeFilter(data.id))
-          }}
-          onPressToggle={(data) => {
-            dispatch(beersSlice.actions.toggleFilter(data.id))
-          }}
-          onPressEnter={(from, to) => {
-            dispatch(beersSlice.actions.addFilter({
-              abv: {from, to}
-            }))
-          }}
+          onPressDelete={onPressDelete}
+          onPressToggle={onPressToggle}
+          onPressAdd={onPressAdd}
         />
       </div>
       <MaterialTable
