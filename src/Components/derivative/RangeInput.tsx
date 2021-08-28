@@ -12,8 +12,6 @@ const RangeInput = (props: RangeInputProps) => {
     ..._props
   } = props;
 
-  const max = _props.max || Infinity, min = _props.min || -Infinity;
-
   const inputFromRef = React.useRef<NumberInput>(null);
   const inputToRef = React.useRef<NumberInput>(null);
 
@@ -22,23 +20,18 @@ const RangeInput = (props: RangeInputProps) => {
     hasChangedTo: false,
   });
 
-  function updateMinMax(from: number, to: number) {
-    if (refState.hasChangedTo) {
-      inputFromRef.current?.setMax(Math.min(to, max));
-    }
-
-    if (refState.hasChangedFrom) {
-      inputToRef.current?.setMin(Math.max(from, min));
-    }
-  }
-
   function onChangeAny() {
     if (!inputFromRef.current) return;
     if (!inputToRef.current) return;
+    
     const valueFrom = inputFromRef.current.getValue();
     const valueTo = inputToRef.current.getValue();
-    updateMinMax(valueFrom, valueTo);
-    props.onChange?.call(null, valueFrom, valueTo);
+    
+    props.onChange?.call(
+      null,
+      refState.hasChangedFrom ? valueFrom : undefined,
+      refState.hasChangedTo ? valueTo : undefined
+    );
   }
 
   function onChangeFrom() {
@@ -73,12 +66,13 @@ const RangeInput = (props: RangeInputProps) => {
 const Container = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: center;
 `;
 
 type RangeInputProps = Omit<NumberInputProps, "onChange"> & {
   inputStyle?: React.CSSProperties
   divider?: React.ReactNode
-  onChange?: (from: number, to: number) => void
+  onChange?: (from: number | undefined, to: number | undefined) => void
 }
 
 export default RangeInput
