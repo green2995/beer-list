@@ -7,7 +7,7 @@ export function useToggleSpring<T extends Record<string, boolean>>(definition: T
   }));
   const staticState = React.useRef(definition).current;
 
-  function set(target: keyof T, bool: boolean, timing?: "instant" | "spring") {
+  function set(target: keyof T, bool: boolean, timing?: ToggleTiming) {
     staticState[target] = bool as T[keyof T];
 
     const next = booleanToNum(staticState[target]);
@@ -21,13 +21,14 @@ export function useToggleSpring<T extends Record<string, boolean>>(definition: T
     }
   }
 
-  function toggle(target: keyof T, timing?: "instant" | "spring") {
+  function toggle(target: keyof T, timing?: ToggleTiming) {
     set(target, !staticState[target], timing)
   }
 
   return [spring as Record<keyof T, SpringValue<number>>, {set, toggle}, staticState] as const
 }
 
+export type ToggleTiming = "instant" | "spring";
 
 function numfyDefinition<T extends Record<string, boolean>>(def: T) {
   const numfied = {} as Record<keyof T, number>;
