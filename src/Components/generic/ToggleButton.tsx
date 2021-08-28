@@ -5,7 +5,7 @@ import { useGesture } from 'react-use-gesture'
 import chroma from "chroma-js"
 import styled from 'styled-components'
 
-import { useToggleSpring } from '../../Hooks/useToggleSpring'
+import { ToggleTiming, useToggleSpring } from '../../Hooks/useToggleSpring'
 import { AnimatedStyle } from '../../Types/react-spring'
 
 const SPRING_CONFIG: SpringConfig = {
@@ -13,7 +13,10 @@ const SPRING_CONFIG: SpringConfig = {
   bounce: 0,
 }
 
-const ToggleButton = (props: ToggleButtonProps) => {
+const ToggleButton = React.forwardRef<ToggleButton, ToggleButtonProps>((
+  props,
+  ref
+) => {
   const { toggled, onToggle, style, children, toggledColor } = props;
   const [toggleSpring, toggleApi, staticState] = useToggleSpring({
     toggled: !!toggled,
@@ -33,20 +36,38 @@ const ToggleButton = (props: ToggleButtonProps) => {
     return chroma.mix(colorFrom, colorTo, v).hex();
   })
 
+  function set(toggled: boolean, timing?: ToggleTiming) {
+    toggleApi.set("toggled", toggled, timing);
+  }
+
+  function toggle(timing?: ToggleTiming) {
+    toggleApi.toggle("toggled", timing);
+  }
+
   React.useEffect(() => {
-    toggleApi.set("toggled", !!toggled);
+    set(!!toggled);
   }, [toggled])
+
+  React.useImperativeHandle(ref, () => {
+    return {
+      toggle,
+      set
+    }
+  })
 
   return (
     <Container style={{ ...style, backgroundColor }} {...bind()}>
       {children}
     </Container>
   )
-}
+})
 
 const Container = styled(animated.div)`
   cursor: pointer;
   user-select: none;
+  &:hover {
+    box-shadow: 0px 0px 0px 1px rgba(0,0,0,0.2);
+  }
 `;
 
 type ToggleButtonProps = {
@@ -56,6 +77,11 @@ type ToggleButtonProps = {
   children?: React.ReactNode;
   defaultColor?: React.CSSProperties["backgroundColor"]
   toggledColor?: React.CSSProperties["backgroundColor"]
+}
+
+type ToggleButton = {
+  set(toggled: boolean, timing?: ToggleTiming): void
+  toggle(timing?: ToggleTiming): void
 }
 
 export default ToggleButton
