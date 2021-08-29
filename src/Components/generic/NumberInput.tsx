@@ -101,6 +101,7 @@ const NumberInput = React.forwardRef<NumberInput, NumberInputProps>((
         onKeyDown={onKeyDown}
         min={props.min}
         max={props.max}
+        style={props.inputStyle}
         step={step}
         type={"number"}
       />
@@ -154,6 +155,7 @@ export type NumberInputProps = {
   step?: number
   onChange?: (value: number) => void
   style?: React.CSSProperties
+  inputStyle?: React.CSSProperties
   unitStyle?: React.CSSProperties
 }
 

@@ -14,14 +14,20 @@ type AbvFilterProps = {
 const AbvFilter = (props: AbvFilterProps) => {
   return (
     <Container>
-      {props.data?.map((range) => (
-        <AbvFilterToggleButton
-          key={range.id}
-          onPressToggle={(result) => props.onPressToggle?.call(null, range, result)}
-          onPressDelete={props.onPressDelete?.bind(null, range)}
-          range={range}
-        />)
-      )}
+      <FilterTitle>도수</FilterTitle>
+
+      <ButtonsContainer>
+        {props.data?.map((range) => (
+          <AbvFilterToggleButton
+            key={range.id}
+            onPressToggle={(result) => props.onPressToggle?.call(null, range, result)}
+            onPressDelete={props.onPressDelete?.bind(null, range)}
+            range={range}
+          />)
+        )}
+      </ButtonsContainer>
+
+
       <AbvFilterRangeInput
         onPressAdd={props.onPressAdd}
       />
@@ -31,7 +37,28 @@ const AbvFilter = (props: AbvFilterProps) => {
 
 const Container = styled.div`
   display: flex;
+  position: relative;
+  width: 100%;
+  display: flex;
   flex-direction: row;
+  align-items: center;
+  min-height: 45px;
+`;
+
+const ButtonsContainer = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+`;
+
+const FilterTitle = styled.div`
+  margin-right: 10px;
+  width: 150px;
+  padding: 10px;
+  background-color: lightgrey;
+  border-radius: 5px;
+  font-size: 13px;
 `;
 
 

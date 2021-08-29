@@ -6,7 +6,6 @@ import NumberInput, { NumberInputProps } from '../generic/NumberInput'
 const RangeInput = (props: RangeInputProps) => {
   const {
     divider,
-    inputStyle,
     style,
     onChange,
     ..._props
@@ -48,14 +47,12 @@ const RangeInput = (props: RangeInputProps) => {
     <Container style={style}>
       <NumberInput
         ref={inputFromRef}
-        style={inputStyle}
         onChange={onChangeFrom}
         {..._props}
       />
       {divider || "~"}
       <NumberInput
         ref={inputToRef}
-        style={inputStyle}
         onChange={onChangeTo}
         {..._props}
       />

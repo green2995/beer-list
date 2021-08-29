@@ -35,33 +35,33 @@ const AvFilterToggleButton = (props: AvFilterToggleButtonProps) => {
     }
   })
 
-  const bindDelete = useGesture({
-    onClick: () => {
-      const visible = toggleViewRef.current?.getVisible()
-      if (visible) {
-        props.onPressDelete?.call(null);
-      }
+  function onClickDelete() {    
+    const visible = toggleViewRef.current?.getVisible()
+    if (visible) {
+      props.onPressDelete?.call(null);
     }
-  })
+  }
 
   return (
     <ToggleButtonContainer {...bindContainer()}>
       <ToggleButton
         style={{
-          padding: TOGGLE_BUTTON_PADDING_VERTICAL,
           borderRadius: 100,
+          textAlign: "center",
+          padding: TOGGLE_BUTTON_PADDING_VERTICAL,
           paddingLeft: TOGGLE_BUTTON_PADDING_VERTICAL * 2,
           paddingRight: TOGGLE_BUTTON_PADDING_VERTICAL * 2,
         }}
         onToggle={onToggle}
+        defaultColor={"rgba(255,255,255,0.5)"}
         toggledColor={"pink"}
       >
         <RangeText>
-          {range.from}도 ~ {range.to}도
+          {range.from}도 - {range.to}도
         </RangeText>
       </ToggleButton>
       <DeleteButtonContainer ref={toggleViewRef}>
-        <DeleteButton {...bindDelete()}>
+        <DeleteButton onClick={onClickDelete}>
           <CloseIcon style={{ fontSize: 12, color: "grey" }} />
         </DeleteButton>
       </DeleteButtonContainer>
@@ -76,6 +76,7 @@ const RangeText = styled.div`
 
 const ToggleButtonContainer = styled.div`
   position: relative;
+  margin: 5px;
 `;
 
 const DeleteButtonContainer = styled(ToggleView)`

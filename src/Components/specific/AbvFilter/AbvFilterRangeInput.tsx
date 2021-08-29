@@ -1,3 +1,4 @@
+import styled from 'styled-components';
 import { useCurrent } from '../../../Hooks/useCurrent'
 import RangeInput from '../../derivative/RangeInput'
 
@@ -21,14 +22,12 @@ const AbvFilterRangeInput = (props: AbvFilterRangeInputProps) => {
 
   function onPressAdd() {
     const [from, to] = [refState.from, refState.to].sort();
-    if (from === ABV_FILTER_MIN && to === ABV_FILTER_MIN) return;
-    if (from === ABV_FILTER_MAX && to === ABV_FILTER_MAX) return;
     props.onPressAdd?.call(null, from, to);
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "row", alignItems: "center", marginLeft: 10 }}>
-      <div>직접입력</div>
+    <Container>
+      <RangeInputTitle>직접입력</RangeInputTitle>
       <div style={{ width: 5 }}></div>
       <RangeInput
         min={ABV_FILTER_MIN}
@@ -36,15 +35,47 @@ const AbvFilterRangeInput = (props: AbvFilterRangeInputProps) => {
         step={0.1}
         unit={"도"}
         onChange={onChange}
-        inputStyle={{ width: 100, padding: 5 }}
+        inputStyle={{ width: 100, padding: 5, backgroundColor: "rgba(255,255,255,0.5)" }}
         unitStyle={{ fontSize: 12 }}
         divider={<div style={{ marginLeft: 5, marginRight: 5 }}>~</div>}
       />
-      <button onClick={onPressAdd} style={{ marginLeft: 10 }}>
+      <AddButton onClick={onPressAdd}>
         입력
-      </button>
-    </div>
+      </AddButton>
+    </Container>
   )
 }
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: 10px;
+`;
+
+const RangeInputTitle = styled.div`
+  padding: 5px;
+  font-size: 12px;
+`;
+
+const AddButton = styled.button`
+  margin-left: 10px;
+  font-size: 12px;
+  outline: none;
+  border: none;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  cursor: pointer;
+  background-color: rgba(255,255,255,0.5);
+  border-radius: 5px;
+  &:hover {
+    background-color: white;
+  }
+  &:active {
+    background-color: rgba(255,255,255,0.5);
+  }
+`;
+
 
 export default AbvFilterRangeInput
