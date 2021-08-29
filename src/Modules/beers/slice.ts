@@ -9,7 +9,7 @@ const beersAdapder = createEntityAdapter<Beer>({
 })
 
 /** for filter id */
-let filterUniCount = 0;
+let filterUniCount = 4;
 
 export const beersSlice = createSlice({
   name: "beers",
@@ -18,7 +18,12 @@ export const beersSlice = createSlice({
     isLoading: false,
     error: null as any,
     columnIndice: tableColumns.map((_, i) => i),
-    filters: [] as WithFilterInfo<BeerFilter>[]
+    filters: [
+      {abv: {from: 0, to: 5}, id: 0},
+      {abv: {from: 5, to: 10}, id: 1},
+      {abv: {from: 10, to: 15}, id: 2},
+      {abv: {from: 15, to: 55}, id: 3}
+    ] as WithFilterInfo<BeerFilter>[]
   },
   reducers: {
     load: (state) => {

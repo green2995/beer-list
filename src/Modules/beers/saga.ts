@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from "@redux-saga/core/effects";
+import { call, put, takeEvery, takeLatest } from "@redux-saga/core/effects";
 import { Beer } from "../../Interface/beer";
 import API from "./api";
 import { beersSlice } from "./slice";
@@ -15,4 +15,3 @@ function* fetchBeers() {
 export function* watchFetchBeers() {
   yield takeLatest(beersSlice.actions.load, fetchBeers)
 }
-
