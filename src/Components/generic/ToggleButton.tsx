@@ -1,7 +1,5 @@
 import React from 'react'
 import { animated, SpringConfig } from "react-spring"
-import { useGesture } from 'react-use-gesture'
-
 import chroma from "chroma-js"
 import styled from 'styled-components'
 
@@ -24,13 +22,12 @@ const ToggleButton = React.forwardRef<ToggleButton, ToggleButtonProps>((
 
   const colorFrom = props.defaultColor || "rgba(255,255,255,0)";
   const colorTo = toggledColor || "dodgerblue";
+  
+  function onClick() {
+    toggleApi.toggle("toggled");
+    onToggle?.call(null, staticState.toggled);
 
-  const bind = useGesture({
-    onClick: () => {
-      toggleApi.toggle("toggled");
-      onToggle?.call(null, staticState.toggled);
-    }
-  })
+  }
 
   const backgroundColor = toggleSpring.toggled.to((v) => {
     return chroma.mix(colorFrom, colorTo, v).hex();
@@ -56,7 +53,7 @@ const ToggleButton = React.forwardRef<ToggleButton, ToggleButtonProps>((
   })
 
   return (
-    <Container style={{ ...style, backgroundColor }} {...bind()}>
+    <Container onClick={onClick} style={{ ...style, backgroundColor }}>
       {children}
     </Container>
   )

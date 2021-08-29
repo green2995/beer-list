@@ -5,10 +5,60 @@ import MaterialTable, { Column } from "material-table"
 import { tableColumns } from '../Modules/beers/columns';
 import { swap } from '../Util/array/swap';
 import AbvFilter from '../Components/specific/AbvFilter';
+import { AbsoluteFill, CenterHorizontal } from '../Styled';
+import styled from 'styled-components';
+
+
+/** 
+ * excerpted from material table install guide
+ * https://material-table.com/#/docs/install
+ */
+
+import AddBox from '@material-ui/icons/AddBox';
+import ArrowDownward from '@material-ui/icons/ArrowDownward';
+import Check from '@material-ui/icons/Check';
+import ChevronLeft from '@material-ui/icons/ChevronLeft';
+import ChevronRight from '@material-ui/icons/ChevronRight';
+import Clear from '@material-ui/icons/Clear';
+import DeleteOutline from '@material-ui/icons/DeleteOutline';
+import Edit from '@material-ui/icons/Edit';
+import FilterList from '@material-ui/icons/FilterList';
+import FirstPage from '@material-ui/icons/FirstPage';
+import LastPage from '@material-ui/icons/LastPage';
+import Remove from '@material-ui/icons/Remove';
+import SaveAlt from '@material-ui/icons/SaveAlt';
+import Search from '@material-ui/icons/Search';
+import ViewColumn from '@material-ui/icons/ViewColumn';
+
+import { SvgIconProps } from '@material-ui/core/SvgIcon';
+import { Link, useHistory } from 'react-router-dom';
+import HomeButton from '../Components/specific/HomeButton';
+
+const tableIcons = {
+  Add: React.forwardRef<SVGSVGElement, SvgIconProps>((props, ref) => <AddBox {...props} ref={ref} />),
+  Check: React.forwardRef<SVGSVGElement, SvgIconProps>((props, ref) => <Check {...props} ref={ref} />),
+  Clear: React.forwardRef<SVGSVGElement, SvgIconProps>((props, ref) => <Clear {...props} ref={ref} />),
+  Delete: React.forwardRef<SVGSVGElement, SvgIconProps>((props, ref) => <DeleteOutline {...props} ref={ref} />),
+  DetailPanel: React.forwardRef<SVGSVGElement, SvgIconProps>((props, ref) => <ChevronRight {...props} ref={ref} />),
+  Edit: React.forwardRef<SVGSVGElement, SvgIconProps>((props, ref) => <Edit {...props} ref={ref} />),
+  Export: React.forwardRef<SVGSVGElement, SvgIconProps>((props, ref) => <SaveAlt {...props} ref={ref} />),
+  Filter: React.forwardRef<SVGSVGElement, SvgIconProps>((props, ref) => <FilterList {...props} ref={ref} />),
+  FirstPage: React.forwardRef<SVGSVGElement, SvgIconProps>((props, ref) => <FirstPage {...props} ref={ref} />),
+  LastPage: React.forwardRef<SVGSVGElement, SvgIconProps>((props, ref) => <LastPage {...props} ref={ref} />),
+  NextPage: React.forwardRef<SVGSVGElement, SvgIconProps>((props, ref) => <ChevronRight {...props} ref={ref} />),
+  PreviousPage: React.forwardRef<SVGSVGElement, SvgIconProps>((props, ref) => <ChevronLeft {...props} ref={ref} />),
+  ResetSearch: React.forwardRef<SVGSVGElement, SvgIconProps>((props, ref) => <Clear {...props} ref={ref} />),
+  Search: React.forwardRef<SVGSVGElement, SvgIconProps>((props, ref) => <Search {...props} ref={ref} />),
+  SortArrow: React.forwardRef<SVGSVGElement, SvgIconProps>((props, ref) => <ArrowDownward {...props} ref={ref} />),
+  ThirdStateCheck: React.forwardRef<SVGSVGElement, SvgIconProps>((props, ref) => <Remove {...props} ref={ref} />),
+  ViewColumn: React.forwardRef<SVGSVGElement, SvgIconProps>((props, ref) => <ViewColumn {...props} ref={ref} />)
+};
+
 
 function BeerList() {
+  const history = useHistory();
   const { isLoading, columnIndice } = useSelector(beersSelector.raw)
-  const avFilters = useSelector(beersSelector.abvFilters);
+  const abvFilters = useSelector(beersSelector.abvFilters);
   const beers = useSelector(beersSelector.filteredArr);
   const dispatch = useDispatch();
   const columnIndice_Temp = React.useRef(columnIndice);
@@ -37,32 +87,85 @@ function BeerList() {
 
   function onPressAdd(from: number, to: number) {
     dispatch(beersSlice.actions.addFilter({
-      abv: {from, to}
+      abv: { from, to }
     }))
   }
 
+  function onPressHome() {
+    history.push("/home")
+  }
+
   return (
-    <div>
-      <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-        <div>
-          도수
-        </div>
-        <AbvFilter
-          data={avFilters}
-          onPressDelete={onPressDelete}
-          onPressToggle={onPressToggle}
-          onPressAdd={onPressAdd}
-        />
-      </div>
-      <MaterialTable
-        title={"한 번 먹으면 두 번 먹고 싶은 수제맥주"}
-        isLoading={isLoading}
-        onColumnDragged={onColumnDragged}
-        columns={columnIndice.map((i) => tableColumns[i])}
-        data={beers}
-      />
-    </div>
+    <Container>
+      <BackgroundImage src={"https://i.ibb.co/gwnH8QP/image.jpg"} />
+      <BodyContainer>
+        <CenterHorizontal style={{ minWidth: 1200, margin: 20 }}>
+          <HomeButton onClick={onPressHome} />
+          <ContentContainer style={{ minWidth: 1200 }}>
+            <FilterContainer>
+              <AbvFilter
+                data={abvFilters}
+                onPressDelete={onPressDelete}
+                onPressToggle={onPressToggle}
+                onPressAdd={onPressAdd}
+              />
+            </FilterContainer>
+            <MaterialTable
+              icons={tableIcons}
+              title={(<TableTitle>맥주 리스트</TableTitle>)}
+              isLoading={isLoading}
+              onColumnDragged={onColumnDragged}
+              columns={columnIndice.map((i) => tableColumns[i])}
+              data={beers}
+              options={{
+                headerStyle: { backgroundColor: "rgba(255,255,255,0.5)" },
+                fixedColumns: { left: 0 }
+              }}
+              style={{ minWidth: 1200, backgroundColor: "rgba(255,255,255,0.5)" }}
+            />
+          </ContentContainer>
+        </CenterHorizontal>
+      </BodyContainer>
+    </Container>
   )
 }
+
+const Container = styled(AbsoluteFill)`
+  background-color: black;
+  overflow: hidden;
+`;
+
+const BodyContainer = styled.div`
+  height: 100vh;
+  overflow: scroll;
+  position: absolute;
+  width: 100vw;
+`;
+
+const ContentContainer = styled.div`
+  width: 1000px;
+  margin-top: 20px;
+  margin-bottom: 100px;
+`;
+
+
+const BackgroundImage = styled.img`
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  transform: translateY(300px);
+`;
+
+const TableTitle = styled.div`
+  color: white;
+`;
+
+const FilterContainer = styled.div`
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 3px;
+  background-color: rgba(255,255,255,0.5);
+`;
 
 export default BeerList

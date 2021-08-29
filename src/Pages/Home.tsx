@@ -1,11 +1,13 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { animated, useSpring } from 'react-spring'
-import { useGesture } from 'react-use-gesture'
 import styled from 'styled-components'
 import TrailAppear from '../Components/specific/TrailAppear'
+import { AbsoluteFill } from '../Styled'
 import { Easing } from '../Util/animation/easings'
 import { interpolate } from '../Util/number/interpolate'
+import { repeatUntil } from '../Util/timer/repeatUntil'
+import { waitFullLoad } from '../Util/timer/waitFullLoad'
 
 const Home = () => {
   const history = useHistory();
@@ -25,11 +27,9 @@ const Home = () => {
     scale: 1,
   }))
 
-  const buttonBind = useGesture({
-    onClick: () => {
-      history.push("/beerlist")
-    }
-  })
+  function onClickButton() {
+    history.push("/beerlist")
+  }
 
   function pullBeer(onResolve?: () => void) {
     beerApi.start({
@@ -56,11 +56,11 @@ const Home = () => {
     pullBeer(pushBeer);
   }
 
-  React.useEffect(() => {
-    setTimeout(() => {
+  function onLoadImage() {
+    waitFullLoad(() => {
       setOpen(true);
-    }, 1000)
-  })
+    })
+  }
 
   const filter = spring.dig.to((val) => `blur(${interpolate(val, 0, 1, 0, 20)}px)`)
   const y = spring.dig.to((val) => interpolate(val, 0, 1, 0, 300));
@@ -73,10 +73,10 @@ const Home = () => {
         src={"https://bit.ly/3sSj7z4"}
         style={{ filter, y }}
       />
-      <AbsoluteFill>
-        <TitleContainer>
+      <TitleContainer>
+        <TitleAligner>
           <TrailAppear
-            config={{ tension: 1000 }}
+            config={{ friction: 10 }}
             onFinish={onAppearFinish}
             style={{ alignItems: "center", display: "flex", flexDirection: "column" }}
             lineHeight={[120, 130, 100, 80, 80]}
@@ -85,28 +85,23 @@ const Home = () => {
             <TitleText style={{ fontSize: 100 }}>맥주 한 잔</TitleText>
             <TitleText style={{ fontSize: 80 }}>맥주 한 잔</TitleText>
             <TitleText style={{ fontSize: 60 }}>맥주 한 잔</TitleText>
-            <BeerlistButton {...buttonBind()}>
+            <BeerlistButton onClick={onClickButton}>
               <TitleText style={{ fontSize: 20 }}>맥주 한 잔!</TitleText>
               <animated.img
+                onLoad={onLoadImage}
                 style={{ ...beerStyle, rotateZ: beer_rotateZ, marginLeft: 5 }}
                 src={"https://bit.ly/3DqC9la"}
                 width={"20px"}
               />
             </BeerlistButton>
           </TrailAppear>
-        </TitleContainer>
-      </AbsoluteFill>
-      {/* <Link to={"/beerlist"}>beerlist</Link> */}
+        </TitleAligner>
+      </TitleContainer>
     </Container>
   )
 }
 
-const AbsoluteFill = styled.div`
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
+const TitleContainer = styled(AbsoluteFill)`
   padding-top: 20vh;
 `;
 
@@ -120,14 +115,12 @@ const Container = styled.div`
 
 const BackgroundImage = styled(animated.img)`
   position: absolute;
-  bottom: 0;
   width: 100vw;
   height: 100vh;
   object-fit: cover;
-  z-index: 0;
 `;
 
-const TitleContainer = styled.div`
+const TitleAligner = styled.div`
   display: flex;
   justify-content: center;
   user-select: none;
