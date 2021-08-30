@@ -1,7 +1,7 @@
 import { createEntityAdapter, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../..";
 import { Beer } from "../../Interface/beer";
-import { tableColumns } from "./columns";
+import { tableColumns } from "../../Pages/BeerList/columns";
 
 const beersAdapder = createEntityAdapter<Beer>({
   selectId: (beer) => beer.id,

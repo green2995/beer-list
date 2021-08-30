@@ -1,7 +1,7 @@
 import React from "react";
 import { Column } from "material-table"
 import { Beer } from "../../Interface/beer"
-import BeerThumbnail from "../../Components/specific/BeerThumbnail";
+import BeerThumbnail from "./BeerThumbnail";
 import { CenterAll } from "../../Styled";
 
 export const tableColumns = [

@@ -2,9 +2,9 @@ import React from 'react'
 import { animated } from 'react-spring';
 import styled from 'styled-components';
 import { BeerFilter, WithFilterInfo } from '../../../Modules/beers';
-import ToggleButton from '../../generic/ToggleButton';
+import ToggleButton from '../../../Components/generic/ToggleButton';
 import CloseIcon from "@material-ui/icons/Close"
-import ToggleView from '../../generic/ToggleView';
+import ToggleView from '../../../Components/generic/ToggleView';
 import { useGesture } from 'react-use-gesture';
 import { useCurrent } from '../../../Hooks/useCurrent';
 

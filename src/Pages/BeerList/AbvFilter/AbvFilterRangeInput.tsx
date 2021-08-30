@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useCurrent } from '../../../Hooks/useCurrent'
-import RangeInput from '../../derivative/RangeInput'
+import RangeInput from '../../../Components/derivative/RangeInput'
 
 type AbvFilterRangeInputProps = {
   onPressAdd?: (from: number, to: number) => void
