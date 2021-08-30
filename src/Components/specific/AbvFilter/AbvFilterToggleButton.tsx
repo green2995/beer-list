@@ -55,6 +55,7 @@ const AvFilterToggleButton = (props: AvFilterToggleButtonProps) => {
         onToggle={onToggle}
         defaultColor={"rgba(255,255,255,0.5)"}
         toggledColor={"pink"}
+        toggled={props.range.enabled}
       >
         <RangeText>
           {range.from}도 - {range.to}도
