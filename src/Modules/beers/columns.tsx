@@ -1,32 +1,21 @@
+import React from "react";
 import { Column } from "material-table"
 import { Beer } from "../../Interface/beer"
+import BeerThumbnail from "../../Components/specific/BeerThumbnail";
+import { CenterAll } from "../../Styled";
 
 export const tableColumns = [
   {
     field: "name",
     title: "제품명",
-    headerStyle: { padding: 0, textAlign: "center", maxWidth: 300 },
-    cellStyle: { padding: 20, maxWidth: 300 },
-    width: 300,
-    render: (beer) => {
-      return (
-        <div style={{
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          backgroundColor: "rgba(255,255,255,0.7)",
-          padding: 20,
-          borderRadius: 10,
-        }}>
-          <div>
-            <img src={beer.image_url} height={300} />
-          </div>
-          <div style={{ fontSize: 20, marginTop: 10, textAlign: "center" }}>{beer.name}</div>
-          <div style={{ fontSize: 14, textAlign: "center" }}>({beer.tagline})</div>
-        </div>
-      )
-    },
+    headerStyle: { padding: 0, textAlign: "center", maxWidth: 340 },
+    cellStyle: { padding: 0, maxWidth: 340 },
+    width: 340,
+    render: (beer) => (
+      <CenterAll>
+        <BeerThumbnail beer={beer} />
+      </CenterAll>
+    ),
   },
   {
     field: "abv",
@@ -66,6 +55,13 @@ export const tableColumns = [
     title: "잘 어울리는 음식",
     headerStyle: { minWidth: 200, maxWidth: 300 },
     cellStyle: { maxWidth: 300 },
+    render: (beer) => {
+      return (
+        <div>
+          {beer.food_pairing.join(", ")}
+        </div>
+      )
+    },
     sorting: false,
   },
 ] as (Column<Beer> & { field: keyof Beer })[]

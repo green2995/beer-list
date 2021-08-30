@@ -25,3 +25,10 @@ export const CenterAll = styled(VertiaclFlex)`
   align-items: center;
   justify-content: center;
 `;
+
+export const FlexHorizontal = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+`;

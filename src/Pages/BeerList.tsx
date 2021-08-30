@@ -96,51 +96,39 @@ function BeerList() {
   }
 
   return (
-    <Container>
-      <BackgroundImage src={"https://i.ibb.co/gwnH8QP/image.jpg"} />
-      <BodyContainer>
-        <CenterHorizontal style={{ minWidth: 1200, margin: 20 }}>
-          <HomeButton onClick={onPressHome} />
-          <ContentContainer style={{ minWidth: 1200 }}>
-            <FilterContainer>
-              <AbvFilter
-                data={abvFilters}
-                onPressDelete={onPressDelete}
-                onPressToggle={onPressToggle}
-                onPressAdd={onPressAdd}
-              />
-            </FilterContainer>
-            <MaterialTable
-              icons={tableIcons}
-              title={(<TableTitle>맥주 리스트</TableTitle>)}
-              isLoading={isLoading}
-              onColumnDragged={onColumnDragged}
-              columns={columnIndice.map((i) => tableColumns[i])}
-              data={beers}
-              options={{
-                headerStyle: { backgroundColor: "rgba(255,255,255,0.5)" },
-                fixedColumns: { left: 0 }
-              }}
-              style={{ minWidth: 1200, backgroundColor: "rgba(255,255,255,0.5)" }}
+    <>
+      <div style={{ position: "fixed", backgroundColor: "black", zIndex: -1, top: 0, left: 0, right: 0, bottom: 0 }}>
+        <BackgroundImage src={"https://i.ibb.co/gwnH8QP/image.jpg"} />
+      </div>
+      <CenterHorizontal style={{ minWidth: 1200, margin: 20 }}>
+        <HomeButton onClick={onPressHome} />
+        <ContentContainer style={{ minWidth: 1200 }}>
+          <FilterContainer>
+            <AbvFilter
+              data={abvFilters}
+              onPressDelete={onPressDelete}
+              onPressToggle={onPressToggle}
+              onPressAdd={onPressAdd}
             />
-          </ContentContainer>
-        </CenterHorizontal>
-      </BodyContainer>
-    </Container>
+          </FilterContainer>
+          <MaterialTable
+            icons={tableIcons}
+            title={(<TableTitle>맥주 리스트</TableTitle>)}
+            isLoading={isLoading}
+            onColumnDragged={onColumnDragged}
+            columns={columnIndice.map((i) => tableColumns[i])}
+            data={beers}
+            options={{
+              headerStyle: { backgroundColor: "rgba(255,255,255,0.5)" },
+              fixedColumns: { left: 0 }
+            }}
+            style={{ minWidth: 1200, backgroundColor: "rgba(255,255,255,0.5)" }}
+          />
+        </ContentContainer>
+      </CenterHorizontal>
+    </>
   )
 }
-
-const Container = styled(AbsoluteFill)`
-  background-color: black;
-  overflow: hidden;
-`;
-
-const BodyContainer = styled.div`
-  height: 100vh;
-  overflow: scroll;
-  position: absolute;
-  width: 100vw;
-`;
 
 const ContentContainer = styled.div`
   width: 1000px;
@@ -155,6 +143,7 @@ const BackgroundImage = styled.img`
   height: 100vh;
   object-fit: cover;
   transform: translateY(300px);
+  opacity: 0.5;
 `;
 
 const TableTitle = styled.div`
