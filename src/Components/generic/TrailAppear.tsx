@@ -2,6 +2,7 @@ import { useSprings, useTrail } from '@react-spring/core';
 import { animated } from '@react-spring/web';
 import React from 'react'
 import { SpringConfig } from 'react-spring';
+import { AnimatedStyle } from '../../Types/react-spring';
 
 type TrailAppearProps = {
   visible?: boolean
