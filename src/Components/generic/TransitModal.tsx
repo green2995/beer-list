@@ -10,7 +10,7 @@ import ResizeTrackView, { AbsoluteOffset } from './ResizeTrackView';
 const AnimatedResizeTrackView = animated(ResizeTrackView);
 
 const TransitModal = (props: TransitModalProps) => {
-  const { open, style, ..._props } = props;
+  const { open, style, defaultSize, ..._props } = props;
 
   const ref = React.useRef<HTMLDivElement>(null);
   const refState = useCurrent({
@@ -18,11 +18,7 @@ const TransitModal = (props: TransitModalProps) => {
     opening: false,
     open: false,
     hasOpened: false,
-    rect: {
-      left: -1,
-      right: -1,
-      top: -1,
-      bottom: -1,
+    rect: defaultSize || {
       width: -1,
       height: -1,
     }
@@ -45,7 +41,9 @@ const TransitModal = (props: TransitModalProps) => {
           x: -window.scrollX,
           y: -window.scrollY,
           config: {
-            tension: 2000,
+            tension: 1000,
+            bounce: 0,
+            clamp: true,
           },
         });
 
@@ -102,6 +100,7 @@ const TransitModal = (props: TransitModalProps) => {
   function onLayout(rect: ClientRect) {
     if (refState.open) return;
     if (refState.recoveringPosition) return;
+    if (props.defaultSize) return;
     updateRect(rect);
   }
 
@@ -181,6 +180,12 @@ const TransitModal = (props: TransitModalProps) => {
     })
   }, [open])
 
+  React.useEffect(() => {
+    if (defaultSize) {
+      refState.rect = defaultSize;
+    }
+  }, [defaultSize])
+
   const width = spring.width.to((val) => {
     if (refState.rect.width === -1) return props.style?.width || "auto";
     return val || refState.rect.width;
@@ -220,6 +225,7 @@ type TransitModalProps = Omit<
 > & {
   style?: AnimatedStyle<typeof animated.div>
   open?: boolean
+  defaultSize?: {width: number, height: number}
 }
 
 export default TransitModal
