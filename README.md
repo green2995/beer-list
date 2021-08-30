@@ -44,7 +44,7 @@
 > 삭제하거나 추가할 수 있는 알코올 도수 필터입니다. 선택한 도수에 해당하는 맥주들을 모두 보여줍니다.
 
 
-### Main Animation
+### /home Animation
 ![main-animation](https://user-images.githubusercontent.com/24871544/131306845-baefb215-4c41-4476-b5de-6b79151c261a.gif)
 > react-spring을 사용한 trail 애니메이션입니다.
 
