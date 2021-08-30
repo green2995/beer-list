@@ -31,3 +31,26 @@
     ├── observer: resize observer 관련 유틸 (TransitModal에서 컨테이너의 크기 변화를 추적하기 위해 제작)
     └── timer: timing 관련 유틸 (메인 화면에서 애니메이션을 실행할 때 이미지 painting이 끝났는지 확인하기 위해 제작)
 ```
+
+## Features
+
+### Column Change
+![column-change](https://user-images.githubusercontent.com/24871544/131306837-b9e13f8b-2db3-4629-9894-47b723a0711d.gif)
+> redux에 column indice에 저장되어 있기 때문에 네비게이션을 이동해도 바뀐 column의 순서가 유지됩니다.
+
+
+### ABV Filter
+![abv-filter](https://user-images.githubusercontent.com/24871544/131306828-195f1b68-c11b-4eac-aced-99b4aa26cdea.gif)
+> 삭제하거나 추가할 수 있는 알코올 도수 필터입니다. 선택한 도수에 해당하는 맥주들을 모두 보여줍니다.
+
+
+### Main Animation
+![main-animation](https://user-images.githubusercontent.com/24871544/131306845-baefb215-4c41-4476-b5de-6b79151c261a.gif)
+> react-spring을 사용한 trail 애니메이션입니다.
+
+
+### Transitional Modal
+![modal](https://user-images.githubusercontent.com/24871544/131306579-f911ce59-ebfb-4659-91ef-e124fb0600d0.gif)
+> react-spring과 mutationObserver를 활용하여 만든 Modal입니다. Thumbnail인 동시에 Modal로서 기능합니다.
+
+
