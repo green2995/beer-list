@@ -1,5 +1,6 @@
 ## Directories
 
+```
 ./src/
 ├── Components
     ├── derivative: generic컴포넌트 혹은 derivative컴포넌트로 구성되었으며, 다양한 화면에서 사용되는 컴포넌트
@@ -29,3 +30,4 @@
     ├── number: interpolate, clamp (react-spring의 값을 interpolation하기 위해 제작)
     ├── observer: resize observer 관련 유틸 (TransitModal에서 컨테이너의 크기 변화를 추적하기 위해 제작)
     └── timer: timing 관련 유틸 (메인 화면에서 애니메이션을 실행할 때 이미지 painting이 끝났는지 확인하기 위해 제작)
+```
