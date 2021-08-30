@@ -6,7 +6,6 @@ import TrailAppear from '../Components/specific/TrailAppear'
 import { AbsoluteFill } from '../Styled'
 import { Easing } from '../Util/animation/easings'
 import { interpolate } from '../Util/number/interpolate'
-import { repeatUntil } from '../Util/timer/repeatUntil'
 import { waitFullLoad } from '../Util/timer/waitFullLoad'
 
 const Home = () => {
@@ -59,7 +58,7 @@ const Home = () => {
   function onLoadImage() {
     waitFullLoad(() => {
       setOpen(true);
-    })
+    }, 200)
   }
 
   const filter = spring.dig.to((val) => `blur(${interpolate(val, 0, 1, 0, 20)}px)`)

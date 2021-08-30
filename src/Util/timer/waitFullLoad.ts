@@ -1,6 +1,6 @@
 import { repeatUntil } from "./repeatUntil";
 
-export function waitFullLoad(callback: () => void) {
+export function waitFullLoad(callback: () => void, interval = 100) {
   let prevEntriesCount = -1;
   return repeatUntil(() => {
     const performanceEntries = performance.getEntries();
@@ -11,5 +11,5 @@ export function waitFullLoad(callback: () => void) {
       callback();
       return true;
     }
-  }, 100)
+  }, interval)
 }
