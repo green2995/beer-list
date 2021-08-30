@@ -5,9 +5,12 @@ import { getAbsoluteOffset } from '../../Util/layout/getAbsoluteOffset';
 import { useCurrent } from '../../Hooks/useCurrent';
 import { AnimatedStyle } from '../../Types/react-spring';
 import { CustomResizeObserver } from '../../Util/observer/resizeObserver';
+import ResizeTrackView, { AbsoluteOffset } from './ResizeTrackView';
+
+const AnimatedResizeTrackView = animated(ResizeTrackView);
 
 const TransitModal = (props: TransitModalProps) => {
-  const { open } = props;
+  const { open, style, ..._props } = props;
 
   const ref = React.useRef<HTMLDivElement>(null);
   const refState = useCurrent({
@@ -34,66 +37,56 @@ const TransitModal = (props: TransitModalProps) => {
     zIndex: 0,
   }))
 
-  const resizeObserver = useCurrent(new CustomResizeObserver());
-
   function onScroll() {
-    if (refState.recoveringPosition) {
-      api.start({
-        to: async (next) => {
-          const el$ = ref.current as HTMLDivElement;
+    if (!refState.recoveringPosition) return;
+    api.start({
+      to: async (next) => {
+        await next({
+          x: -window.scrollX,
+          y: -window.scrollY,
+          config: {
+            tension: 2000,
+          },
+        });
 
-          await next({
-            x: -window.scrollX,
-            y: -window.scrollY,
-            config: {
-              tension: 600,
-              bounce: 0,
-            },
-          });
+        await next({
+          position: "relative",
+          zIndex: 0,
+          x: 0,
+          y: 0,
+          immediate: true,
+          onResolve: () => {
+            refState.recoveringPosition = false;
+          }
+        });
 
-          await next({
-            position: "relative",
-            zIndex: 0,
-            x: 0,
-            y: 0,
-            immediate: true,
-            onResolve: () => {
-              refState.recoveringPosition = false;
-            }
-          });
-
-        }
-      })
-    }
+      }
+    })
   }
 
   function onWindowResize() {
     if (!ref.current) return;
+    if (!refState.open) return;
     const { innerHeight, innerWidth } = window;
     const { left: absX, top: absY } = getAbsoluteOffset(ref.current);
 
-    if (refState.open && refState.opening) {
-      api.start({
-        to: async (next) => {
-          await next({
-            width: innerWidth,
-            height: innerHeight,
-            x: -absX,
-            y: -absY,
-            onResolve: () => {
+    api.start({
+      to: async (next) => {
+        await next({
+          width: innerWidth,
+          height: innerHeight,
+          x: -absX,
+          y: -absY,
+          onResolve: () => {
+            if (refState.opening) {
               refState.opening = false;
             }
-          });
-        }
-      })
-    } else if (refState.open && !refState.opening) {
-      api.set({
-        width: innerWidth,
-        height: innerHeight,
-        x: -absX,
-        y: -absY,
-      })
-    }
+          },
+          immediate: refState.opening === false,
+        });
+      }
+    })
+
   }
 
   function updateRect(rect?: ClientRect) {
@@ -106,34 +99,24 @@ const TransitModal = (props: TransitModalProps) => {
     }
   }
 
+  function onLayout(rect: ClientRect) {
+    if (refState.open) return;
+    if (refState.recoveringPosition) return;
+    updateRect(rect);
+  }
+
   React.useEffect(() => {
     window.addEventListener("resize", onWindowResize);
     document.addEventListener("scroll", onScroll);
 
-    if (ref.current) {
-      updateRect();
-      resizeObserver.observe(ref.current, (rect) => {
-        if (
-          !refState.open
-          && !refState.recoveringPosition
-          && rect.width > 0
-          && rect.height > 0
-        ) {
-          updateRect(rect);
-        }
-      });
-    }
-
     return () => {
       window.removeEventListener("resize", onWindowResize);
       document.removeEventListener("scroll", onScroll);
-      resizeObserver.disconnect();
     }
   }, [])
 
   React.useEffect(() => {
     refState.open = !!open;
-
     api.start({
       to: async (next) => {
         if (!refState.hasOpened) {
@@ -145,8 +128,15 @@ const TransitModal = (props: TransitModalProps) => {
         const { innerHeight, innerWidth } = window;
         const { left: absX, top: absY } = getAbsoluteOffset(ref.current);
 
-        if (open) {
+        if (open) {          
+          await next({
+            width: refState.rect.width,
+            height: refState.rect.height,
+            immediate: true,
+          })
+          
           refState.opening = true;
+          
           await next({
             position: "fixed",
             zIndex: 10,
@@ -193,14 +183,12 @@ const TransitModal = (props: TransitModalProps) => {
 
   const width = spring.width.to((val) => {
     if (refState.rect.width === -1) return props.style?.width || "auto";
-    if (!refState.hasOpened) return props.style?.width || "auto";
-    return val;
+    return val || refState.rect.width;
   }) as Interpolation<number | string>
 
   const height = spring.height.to((val) => {
     if (refState.rect.height === -1) return props.style?.height || "auto";
-    if (!refState.hasOpened) return props.style?.height || "auto";
-    return val;
+    return val || refState.rect.height;
   }) as Interpolation<number | string>
 
   const {
@@ -211,21 +199,25 @@ const TransitModal = (props: TransitModalProps) => {
   } = spring;
 
   return (
-    <animated.div
+    <AnimatedResizeTrackView
+      {..._props}
+      onLayout={onLayout}
       ref={ref}
       style={{
-        ...props.style,
+        ...style,
         ..._spring,
         width,
         height,
       }}>
       {props.children}
-    </animated.div>
+    </AnimatedResizeTrackView>
   )
 }
 
-type TransitModalProps = {
-  children?: React.ReactNode
+type TransitModalProps = Omit<
+  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>,
+  "style" | "ref"
+> & {
   style?: AnimatedStyle<typeof animated.div>
   open?: boolean
 }
